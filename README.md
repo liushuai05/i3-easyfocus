@@ -72,3 +72,52 @@ In order to get more details about a problem you can build in debug mode, which 
 make clean debug
 ./i3-easyfocus
 ```
+
+
+
+Quick Start (Podman)
+Build
+
+With a Containerfile in current directory, build an image with Containerfile:
+```
+podman build -t new_image .
+```
+Create Container
+```
+podman create --name new_container new_image
+```
+To forward port from host to container, use -p host:container, like that:
+```
+podman create --name new_container -p 8022:22 new_image
+```
+Tools like PRoot, gdb and strace requires ptrace() to work. You may want to enable this capability:
+```
+podman create --name new_container --cap-add sys_ptrace new_image
+```
+You may wish KVM and/or graphics device in container:
+```
+podman create --name new_container --device /dev/kvm --device /dev/dri --group-add keep-groups new_image
+```
+Start Container
+```
+podman start new_container
+```
+Run Program
+
+Start bash in a tty:
+```
+podman exec -it new_container bash
+```
+Stop Container
+
+Stop the container:
+```
+podman stop new_container
+```
+Cleanup
+
+Delete image:
+```
+podman rm new_image
+```
+
